@@ -91,13 +91,24 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     // TODO:
     // 1. Create a MinHeap object.
+    MinHeap CipherText;
     // 2. Push all leaf node indices into the heap.
+    for (int i = 0; i < nextFree; ++i) {
+        CipherText.push(weightArr[i], weightArr);
+    }
     // 3. While the heap size is greater than 1:
     //    - Pop two smallest nodes
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
+    int min1 = CipherText.pop(weightArr);
+    int min2 = CipherText.pop(weightArr);
+    int newParent = min1 + min2;
+    CipherText.push(newParent, weightArr);
     // 4. Return the index of the last remaining node (root)
+    if (sizeof(CipherText) >= 1) {
+        return CipherText.data[0];
+    }
     return -1; // placeholder
 }
 
