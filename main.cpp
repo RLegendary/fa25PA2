@@ -101,7 +101,7 @@ int buildEncodingTree(int nextFree) {
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
-    while (CipherText.size > 2) {
+    while (CipherText.size >= 2){
         int min1 = CipherText.pop(weightArr);
         int min2 = CipherText.pop(weightArr);
         int newParent = nextFree++;
@@ -111,7 +111,7 @@ int buildEncodingTree(int nextFree) {
         CipherText.push(newParent, weightArr);
     }
     // 4. Return the index of the last remaining node (root)
-    if (CipherText.size > 1) {
+    if (CipherText.size > 0) {
         return CipherText.data[0];
     } else {
         return -1; // placeholder
@@ -122,14 +122,31 @@ int buildEncodingTree(int nextFree) {
 void generateCodes(int root, string codes[]) {
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
+    for (int i = 0; i < 26; ++i) {
+        codes[i].clear();
+    }
+
+    //single-char edge case
+    if (root == -1) {
+        return;
+    }
+    if (leftArr[root] == -1 && rightArr[root] == -1) {
+        codes[charArr[root] - 'a'] = "0";
+    }
+
     stack<pair<int,string>> S;
     S.push({root, ""});
-
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
     while (!S.empty()) {
         pair<int,string> p = S.top();
         S.pop();
+         if (leftArr[root] != -1) {
+             S.push({leftArr[root], codes[leftArr[root]] + "0"});
+         }
+        if (rightArr[root] != -1) {
+            S.push({rightArr[root], codes[rightArr[root]] + "1"});
+        }
     }
 }
 
