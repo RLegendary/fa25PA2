@@ -122,16 +122,17 @@ int buildEncodingTree(int nextFree) {
 void generateCodes(int root, string codes[]) {
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
+
     for (int i = 0; i < 26; ++i) {
         codes[i].clear();
     }
-
     //single-char edge case
     if (root == -1) {
         return;
     }
     if (leftArr[root] == -1 && rightArr[root] == -1) {
         codes[charArr[root] - 'a'] = "0";
+        return;
     }
 
     stack<pair<int,string>> S;
@@ -141,11 +142,22 @@ void generateCodes(int root, string codes[]) {
     while (!S.empty()) {
         pair<int,string> p = S.top();
         S.pop();
-         if (leftArr[root] != -1) {
-             S.push({leftArr[root], codes[leftArr[root]] + "0"});
-         }
-        if (rightArr[root] != -1) {
-            S.push({rightArr[root], codes[rightArr[root]] + "1"});
+        int node = p.first;
+        string code = p.second;
+
+        bool isLeaf = (leftArr[node] == -1 && rightArr[node] == -1);
+        if (isLeaf) {
+            if (charArr[node] >= 'a' && charArr[node] <= 'z') {
+                codes[charArr[node] - 'a'] = code.empty() ? "0" : code;
+            }
+            continue;
+        }
+
+        if (leftArr[node] != -1) {
+            S.push({leftArr[node], code + "0"});
+        }
+        if (rightArr[node] != -1) {
+            S.push({rightArr[node], code + "1"});
         }
     }
 }
