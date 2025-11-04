@@ -94,30 +94,43 @@ int buildEncodingTree(int nextFree) {
     MinHeap CipherText;
     // 2. Push all leaf node indices into the heap.
     for (int i = 0; i < nextFree; ++i) {
-        CipherText.push(weightArr[i], weightArr);
+        CipherText.push(i,weightArr);
     }
     // 3. While the heap size is greater than 1:
     //    - Pop two smallest nodes
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
-    int min1 = CipherText.pop(weightArr);
-    int min2 = CipherText.pop(weightArr);
-    int newParent = min1 + min2;
-    CipherText.push(newParent, weightArr);
-    // 4. Return the index of the last remaining node (root)
-    if (sizeof(CipherText) >= 1) {
-        return CipherText.data[0];
+    while (CipherText.size > 2) {
+        int min1 = CipherText.pop(weightArr);
+        int min2 = CipherText.pop(weightArr);
+        int newParent = nextFree++;
+        weightArr[newParent] = weightArr[min1] + weightArr[min2];
+        leftArr[newParent] = min1;
+        rightArr[newParent] = min2;
+        CipherText.push(newParent, weightArr);
     }
-    return -1; // placeholder
+    // 4. Return the index of the last remaining node (root)
+    if (CipherText.size > 1) {
+        return CipherText.data[0];
+    } else {
+        return -1; // placeholder
+    }
 }
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
+    stack<pair<int,string>> S;
+    S.push({root, ""});
+
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
+    while (!S.empty()) {
+        pair<int,string> p = S.top();
+        S.pop();
+    }
 }
 
 // Step 5: Print table and encoded message

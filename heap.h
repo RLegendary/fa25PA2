@@ -17,6 +17,9 @@ struct MinHeap {
     void push(int idx, int weightArr[]) {
         // TODO: insert index at end of heap, restore order using upheap()
         //check if size is equal to data array maximum elements before pushing
+        if (idx < 0) {
+            cout<<"Invalid Index"<<endl;
+        }
         if (size == 64) {
             cout<<"Overflow"<<endl;
             return;
@@ -29,7 +32,7 @@ struct MinHeap {
 
     int pop(int weightArr[]) {
         // TODO: remove and return smallest index
-        if (size > 0) {
+        if (size >= 1) {
             data[0] = data[size-1];
             size--;
             //start with the root index when downheaping
@@ -42,36 +45,34 @@ struct MinHeap {
 
     void upheap(int pos, int weightArr[]) {
         // TODO: swap child upward while smaller than parent
-        int parent = pos - 1 / 2;
+        int parent = (pos - 1)/ 2;
         //repeat until data pos index reaches the root or weightArr on data pos index is less than the parent weight
-        while (data[pos] > data[0] or weightArr[data[pos]] >= weightArr[data[parent]]) {
+        while (pos > 0) {
+            int parent = (pos - 1) / 2;
             if (weightArr[data[pos]] < weightArr[data[parent]]) {
-                int temp = data[pos];
-                data[pos] = data[parent];
-                data[parent] = temp;
+                swap(data[pos], data[parent]);
                 pos = parent;
+            } else {
+                break;
             }
         }
     }
 
     void downheap(int pos, int weightArr[]) {
         // TODO: swap parent downward while larger than any child
-        const int leftChild = pos * 2 + 1;
-        const int rightChild = pos * 2 + 2;
-
-        //repeat until weightArr of data pos index is less than or equal to both left and right child, or it reaches a leaf.
-        while (weightArr[data[pos]] <= weightArr[data[leftChild]] && weightArr[data[pos]] <= weightArr[data[rightChild]] or data[leftChild] >= data[size]) {
-            if (weightArr[data[rightChild]] < weightArr[data[pos]]) {
-                const int temp = data[rightChild];
-                data[rightChild] = data[pos];
-                data[pos] = temp;
-                pos = rightChild;
-
-            } if (weightArr[data[leftChild]] < weightArr[data[pos]]) {
-                const int temp = data[leftChild];
-                data[leftChild] = data[pos];
-                data[pos] = temp;
-                pos = leftChild;
+        int parent = pos;
+        int leftChild = pos * 2 + 1;
+        int rightChild = pos * 2 + 2;
+        while (weightArr[data[parent]] < weightArr[data[leftChild]] && weightArr[data[parent]] < weightArr[data[rightChild]]) {
+            if (weightArr[data[rightChild]] < weightArr[data[parent]]) {
+                swap(data[parent], data[rightChild]);
+                rightChild = parent;
+            }
+            if (weightArr[data[leftChild]] < weightArr[data[parent]]) {
+                swap(data[parent], data[leftChild]);
+                leftChild = parent;
+            } else {
+              break;
             }
         }
     }
