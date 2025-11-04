@@ -16,14 +16,16 @@ struct MinHeap {
 
     void push(int idx, int weightArr[]) {
         // TODO: insert index at end of heap, restore order using upheap()
-        //check if size is equal to data array maximum elements before pushing
+        //check if the index is valid
         if (idx < 0) {
             cout<<"Invalid Index"<<endl;
         }
+        //check if size is equal to data array maximum elements before pushing
         if (size == 64) {
             cout<<"Overflow"<<endl;
             return;
         }
+        //put the new index to the first available index
         data[size] = idx;
         size++;
         //start with the last element of the data array before performing upheap
@@ -32,15 +34,17 @@ struct MinHeap {
 
     int pop(int weightArr[]) {
         // TODO: remove and return smallest index
+        //check that the heap is not empty before popping
+        // Replace root with last element, then call downheap()
         if (size > 0) {
             int min = data[0];
             data[0] = data[size-1];
             size--;
             //start with the root index when downheaping
             downheap(0, weightArr);
+            //return original minimum value that was popped
             return min;
         }
-        // Replace root with last element, then call downheap()
         return -1; // placeholder
     }
 
@@ -49,8 +53,10 @@ struct MinHeap {
         //repeat until data pos index reaches the root or weightArr on data pos index is less than the parent weight
         while (pos > 0) {
             int parent = (pos - 1) / 2;
+            //compare the weight of parent and the position or current node
             if (weightArr[data[pos]] < weightArr[data[parent]]) {
                 swap(data[pos], data[parent]);
+                //update to continue moving and comparing
                 pos = parent;
             } else {
                 break;
@@ -64,13 +70,15 @@ struct MinHeap {
             int parent = pos;
             int leftChild = 2 * pos + 1;
             int rightChild = 2 * pos + 2;
-
+            //check if leftChild is less than the parent, then update parent if true
             if (leftChild < size && weightArr[data[leftChild]] < weightArr[data[parent]]) {
                 parent = leftChild;
             }
+            //check if rightChild is less than the parent, then update parent if true
             if (rightChild < size && weightArr[data[rightChild]] < weightArr[data[parent]]) {
                 parent = rightChild;
             }
+            //check if the current position is not the smallest value
             if (parent != pos) {
                 swap(data[pos], data[parent]);
                 pos = parent;

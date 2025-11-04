@@ -101,7 +101,7 @@ int buildEncodingTree(int nextFree) {
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
-    while (CipherText.size >= 2){
+    while (CipherText.size > 1){
         int min1 = CipherText.pop(weightArr);
         int min2 = CipherText.pop(weightArr);
         int newParent = nextFree++;
@@ -122,7 +122,7 @@ int buildEncodingTree(int nextFree) {
 void generateCodes(int root, string codes[]) {
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
-
+    //clear any previous data in the codes array to ensure it's doesn't have any data and start new
     for (int i = 0; i < 26; ++i) {
         codes[i].clear();
     }
@@ -130,6 +130,7 @@ void generateCodes(int root, string codes[]) {
     if (root == -1) {
         return;
     }
+
     if (leftArr[root] == -1 && rightArr[root] == -1) {
         codes[charArr[root] - 'a'] = "0";
         return;
@@ -140,11 +141,15 @@ void generateCodes(int root, string codes[]) {
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
     while (!S.empty()) {
+        //get the nest node from the top of the stack
         pair<int,string> p = S.top();
         S.pop();
+        //the index of the current node
         int node = p.first;
+        //the binary path of the node
         string code = p.second;
 
+        //check if it has no child
         bool isLeaf = (leftArr[node] == -1 && rightArr[node] == -1);
         if (isLeaf) {
             if (charArr[node] >= 'a' && charArr[node] <= 'z') {
